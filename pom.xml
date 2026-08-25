@@ -3,10 +3,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.myspace</groupId>
-  <artifactId>concentration_risk</artifactId>
+  <artifactId>concentration_risk_baseekri</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>kjar</packaging>
-  <name>concentration_risk</name>
+  <name>concentration_risk_baseekri</name>
   <description>Concentration Risk Process - Bank Requirements SRS V1.0</description>
   <dependencies>
     <dependency>
