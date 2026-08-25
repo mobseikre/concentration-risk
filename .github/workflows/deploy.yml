@@ -1,0 +1,34 @@
+name: Build and Deploy kjar
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Build kjar
+        run: mvn clean install
+
+      - name: Deploy to KIE Server
+        run: |
+          curl -u ${{ secrets.KIE_USER }}:${{ secrets.KIE_PASS }} \
+            -X PUT \
+            -H "Content-Type: application/xml" \
+            --data '<kie-container container-id="concentration_risk">
+              <release-id>
+                <group-id>com.myspace</group-id>
+                <artifact-id>concentration_risk</artifact-id>
+                <version>1.0.0-SNAPSHOT</version>
+              </release-id>
+            </kie-container>' \
+            "${{ secrets.KIE_SERVER_URL }}/services/rest/server/containers/concentration_risk"
