@@ -1,0 +1,1039 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/bpmn20" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:bpsim="http://www.bpsim.org/schemas/1.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_ConcentrationRiskDefs" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd http://www.omg.org/spec/DD/20100524/DC DC.xsd http://www.omg.org/spec/DD/20100524/DI DI.xsd" exporter="jBPM Process Modeler" exporterVersion="2.0" targetNamespace="http://www.omg.org/bpmn20">
+
+  <bpmn2:itemDefinition id="_requirementTypeItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_commercialLoansDocItem" structureRef="org.jbpm.document.Document"/>
+  <bpmn2:itemDefinition id="_overdraftDocItem" structureRef="org.jbpm.document.Document"/>
+  <bpmn2:itemDefinition id="_specialFinancingDocItem" structureRef="org.jbpm.document.Document"/>
+  <bpmn2:itemDefinition id="_concentrationDataItem" structureRef="java.util.List"/>
+  <bpmn2:itemDefinition id="_adjustedDataItem" structureRef="java.util.List"/>
+  <bpmn2:itemDefinition id="_calculatedResultsItem" structureRef="com.myspace.concentration_risk.CalculatedResults"/>
+  <bpmn2:itemDefinition id="_narrativeReportItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_checkerDecisionItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_checkerCommentItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_finalCheckerDecisionItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_finalCheckerCommentItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_directorDecisionItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_directorStatementItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_returnReasonItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_excelFilePathItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_archiveRefItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_reportStatusItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_regulatoryLimitItem" structureRef="Double"/>
+
+  <bpmn2:process id="concentration_risk.ConcentrationRisk" drools:packageName="com.myspace.concentration_risk" drools:version="1.0" drools:adHoc="false" name="ConcentrationRisk" isExecutable="true" processType="Public">
+
+    <!-- ═══════════════════════════════════════════
+         PROCESS VARIABLES  (SRS V1.0 — Screens 1-8)
+         ═══════════════════════════════════════════ -->
+    <bpmn2:property id="requirementType" itemSubjectRef="_requirementTypeItem" name="requirementType"/>
+    <bpmn2:property id="commercialLoansDoc" itemSubjectRef="_commercialLoansDocItem" name="commercialLoansDoc"/>
+    <bpmn2:property id="overdraftDoc" itemSubjectRef="_overdraftDocItem" name="overdraftDoc"/>
+    <bpmn2:property id="specialFinancingDoc" itemSubjectRef="_specialFinancingDocItem" name="specialFinancingDoc"/>
+    <bpmn2:property id="concentrationData" itemSubjectRef="_concentrationDataItem" name="concentrationData"/>
+    <bpmn2:property id="adjustedData" itemSubjectRef="_adjustedDataItem" name="adjustedData"/>
+    <bpmn2:property id="calculatedResults" itemSubjectRef="_calculatedResultsItem" name="calculatedResults"/>
+    <bpmn2:property id="narrativeReport" itemSubjectRef="_narrativeReportItem" name="narrativeReport"/>
+    <bpmn2:property id="checkerDecision" itemSubjectRef="_checkerDecisionItem" name="checkerDecision"/>
+    <bpmn2:property id="checkerComment" itemSubjectRef="_checkerCommentItem" name="checkerComment"/>
+    <bpmn2:property id="finalCheckerDecision" itemSubjectRef="_finalCheckerDecisionItem" name="finalCheckerDecision"/>
+    <bpmn2:property id="finalCheckerComment" itemSubjectRef="_finalCheckerCommentItem" name="finalCheckerComment"/>
+    <bpmn2:property id="directorDecision" itemSubjectRef="_directorDecisionItem" name="directorDecision"/>
+    <bpmn2:property id="directorStatement" itemSubjectRef="_directorStatementItem" name="directorStatement"/>
+    <bpmn2:property id="returnReason" itemSubjectRef="_returnReasonItem" name="returnReason"/>
+    <bpmn2:property id="excelFilePath" itemSubjectRef="_excelFilePathItem" name="excelFilePath"/>
+    <bpmn2:property id="archiveRef" itemSubjectRef="_archiveRefItem" name="archiveRef"/>
+    <bpmn2:property id="reportStatus" itemSubjectRef="_reportStatusItem" name="reportStatus"/>
+    <bpmn2:property id="regulatoryLimit" itemSubjectRef="_regulatoryLimitItem" name="regulatoryLimit"/>
+
+    <!-- ═══════════════════════════════════════════
+         START EVENT
+         ═══════════════════════════════════════════ -->
+    <bpmn2:startEvent id="_StartEvent" name="Start">
+      <bpmn2:outgoing>_SF_Start_S1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 1 — REQUIREMENT SELECTION (Maker)
+         SRS 5.1 / FR-1
+         ═══════════════════════════════════════════ -->
+    <bpmn2:userTask id="_Screen1" name="Screen 1 - Requirements Selection" drools:taskName="Screen1_RequirementSelection">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Screen 1 - Requirements Selection]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>_SF_Start_S1</bpmn2:incoming>
+      <bpmn2:outgoing>_SF_S1_S2</bpmn2:outgoing>
+      <bpmn2:ioSpecification>
+        <bpmn2:dataInput id="_Screen1_TaskNameInput" drools:dtype="Object" name="TaskName"/>
+        <bpmn2:dataInput id="_Screen1_GroupIdInput" drools:dtype="Object" name="GroupId"/>
+        <bpmn2:dataInput id="_Screen1_SkippableInput" drools:dtype="Object" name="Skippable"/>
+        <bpmn2:dataInput id="_Screen1_FormNameInput" drools:dtype="Object" name="FormName"/>
+        <bpmn2:dataOutput id="_Screen1_Out_requirementType" drools:dtype="String" name="requirementType"/>
+        <bpmn2:inputSet>
+          <bpmn2:dataInputRefs>_Screen1_TaskNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen1_GroupIdInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen1_SkippableInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen1_FormNameInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet>
+          <bpmn2:dataOutputRefs>_Screen1_Out_requirementType</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen1_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Screen1_RequirementSelection]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen1_TaskNameInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen1_GroupIdInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[maker]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen1_GroupIdInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen1_SkippableInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen1_SkippableInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen1_FormNameInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Screen1_RequirementSelection]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen1_FormNameInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation>
+        <bpmn2:sourceRef>_Screen1_Out_requirementType</bpmn2:sourceRef>
+        <bpmn2:targetRef>requirementType</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:potentialOwner>
+        <bpmn2:resourceAssignmentExpression>
+          <bpmn2:formalExpression>maker</bpmn2:formalExpression>
+        </bpmn2:resourceAssignmentExpression>
+      </bpmn2:potentialOwner>
+    </bpmn2:userTask>
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 2 — DOCUMENTATION UPLOAD (Maker)
+         SRS 5.2 / FR-2 — 3 Excel sheets
+         ═══════════════════════════════════════════ -->
+    <bpmn2:userTask id="_Screen2" name="Screen 2 - Documentation Upload" drools:taskName="Screen2_DocumentUpload">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Screen 2 - Documentation Upload]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>_SF_S1_S2</bpmn2:incoming>
+      <bpmn2:outgoing>_SF_S2_Parse</bpmn2:outgoing>
+      <bpmn2:ioSpecification>
+        <bpmn2:dataInput id="_Screen2_TaskNameInput" drools:dtype="Object" name="TaskName"/>
+        <bpmn2:dataInput id="_Screen2_GroupIdInput" drools:dtype="Object" name="GroupId"/>
+        <bpmn2:dataInput id="_Screen2_SkippableInput" drools:dtype="Object" name="Skippable"/>
+        <bpmn2:dataInput id="_Screen2_FormNameInput" drools:dtype="Object" name="FormName"/>
+        <bpmn2:dataInput id="_Screen2_In_requirementType" drools:dtype="String" name="requirementType"/>
+        <bpmn2:dataOutput id="_Screen2_Out_commercialLoansDoc" drools:dtype="org.jbpm.document.Document" name="commercialLoansDoc"/>
+        <bpmn2:dataOutput id="_Screen2_Out_overdraftDoc" drools:dtype="org.jbpm.document.Document" name="overdraftDoc"/>
+        <bpmn2:dataOutput id="_Screen2_Out_specialFinancingDoc" drools:dtype="org.jbpm.document.Document" name="specialFinancingDoc"/>
+        <bpmn2:inputSet>
+          <bpmn2:dataInputRefs>_Screen2_TaskNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen2_GroupIdInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen2_SkippableInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen2_FormNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen2_In_requirementType</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet>
+          <bpmn2:dataOutputRefs>_Screen2_Out_commercialLoansDoc</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>_Screen2_Out_overdraftDoc</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>_Screen2_Out_specialFinancingDoc</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen2_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Screen2_DocumentUpload]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen2_TaskNameInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen2_GroupIdInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[maker]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen2_GroupIdInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen2_SkippableInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen2_SkippableInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen2_FormNameInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Screen2_DocumentUpload]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen2_FormNameInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:sourceRef>requirementType</bpmn2:sourceRef>
+        <bpmn2:targetRef>_Screen2_In_requirementType</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation>
+        <bpmn2:sourceRef>_Screen2_Out_commercialLoansDoc</bpmn2:sourceRef>
+        <bpmn2:targetRef>commercialLoansDoc</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation>
+        <bpmn2:sourceRef>_Screen2_Out_overdraftDoc</bpmn2:sourceRef>
+        <bpmn2:targetRef>overdraftDoc</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation>
+        <bpmn2:sourceRef>_Screen2_Out_specialFinancingDoc</bpmn2:sourceRef>
+        <bpmn2:targetRef>specialFinancingDoc</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:potentialOwner>
+        <bpmn2:resourceAssignmentExpression>
+          <bpmn2:formalExpression>maker</bpmn2:formalExpression>
+        </bpmn2:resourceAssignmentExpression>
+      </bpmn2:potentialOwner>
+    </bpmn2:userTask>
+
+    <!-- ═══════════════════════════════════════════
+         PARSE DOCUMENTS — builds concentrationData rows
+         from the uploaded Excel files (SRS 5.2 -> 5.3)
+         ═══════════════════════════════════════════ -->
+    <bpmn2:scriptTask id="_ParseDocs" name="Parse Uploaded Documents" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Parse Uploaded Documents]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>_SF_S2_Parse</bpmn2:incoming>
+      <bpmn2:outgoing>_SF_Parse_Merge3</bpmn2:outgoing>
+      <bpmn2:script><![CDATA[
+// ═══ DOCUMENT PARSING (DEMO) ═══
+// Real production logic reads the uploaded .xlsx files with Apache POI and
+// extracts the rows from the official templates (القروض التجارية / السحب على المكشوف /
+// بيان خاص بالتمويلات). This demo seeds representative rows per requirement type so
+// the full workflow can be exercised end to end.
+
+String reqType = (String) kcontext.getVariable("requirementType");
+java.util.List rows = new java.util.ArrayList();
+
+if ("Commercial loans".equals(reqType)) {
+    com.myspace.concentration_risk.ConcentrationRow r = new com.myspace.concentration_risk.ConcentrationRow();
+    r.setCompanyName("Al Wahda Steel Co"); r.setCompanyField("Industry"); r.setGeographicalConcentration("Tripoli");
+    r.setValueGiven(185000000.0); r.setGivenDate(new java.util.Date()); r.setCreditType("Term Loan"); r.setBalanceDue(175000000.0);
+    rows.add(r);
+    r = new com.myspace.concentration_risk.ConcentrationRow();
+    r.setCompanyName("Libya Services Ltd"); r.setCompanyField("Services"); r.setGeographicalConcentration("Benghazi");
+    r.setValueGiven(120000000.0); r.setGivenDate(new java.util.Date()); r.setCreditType("Term Loan"); r.setBalanceDue(118000000.0);
+    rows.add(r);
+    r = new com.myspace.concentration_risk.ConcentrationRow();
+    r.setCompanyName("Medina Trading"); r.setCompanyField("Trade"); r.setGeographicalConcentration("Misrata");
+    r.setValueGiven(95000000.0); r.setGivenDate(new java.util.Date()); r.setCreditType("Revolving"); r.setBalanceDue(94000000.0);
+    rows.add(r);
+    r = new com.myspace.concentration_risk.ConcentrationRow();
+    r.setCompanyName("Delta Construction"); r.setCompanyField("Construction"); r.setGeographicalConcentration("Tripoli");
+    r.setValueGiven(82000000.0); r.setGivenDate(new java.util.Date()); r.setCreditType("Overdraft"); r.setBalanceDue(80000000.0);
+    rows.add(r);
+} else if ("Overdraft".equals(reqType)) {
+    com.myspace.concentration_risk.ConcentrationRow r = new com.myspace.concentration_risk.ConcentrationRow();
+    r.setCompanyName("Libya Services Ltd"); r.setCompanyField("Services"); r.setGeographicalConcentration("Benghazi");
+    r.setValueGiven(75000000.0); r.setGivenDate(new java.util.Date()); r.setCreditType("Overdraft"); r.setBalanceDue(74000000.0);
+    rows.add(r);
+    r = new com.myspace.concentration_risk.ConcentrationRow();
+    r.setCompanyName("Green Farm Co"); r.setCompanyField("Agriculture"); r.setGeographicalConcentration("Zawiya");
+    r.setValueGiven(46000000.0); r.setGivenDate(new java.util.Date()); r.setCreditType("Overdraft"); r.setBalanceDue(45000000.0);
+    rows.add(r);
+    r = new com.myspace.concentration_risk.ConcentrationRow();
+    r.setCompanyName("Fast Logistics"); r.setCompanyField("Transport"); r.setGeographicalConcentration("Tripoli");
+    r.setValueGiven(33000000.0); r.setGivenDate(new java.util.Date()); r.setCreditType("Overdraft"); r.setBalanceDue(32000000.0);
+    rows.add(r);
+} else {
+    com.myspace.concentration_risk.ConcentrationRow r = new com.myspace.concentration_risk.ConcentrationRow();
+    r.setCompanyName("Gulf Textile Co"); r.setCompanyField("Industry"); r.setGeographicalConcentration("Benghazi");
+    r.setValueGiven(64000000.0); r.setGivenDate(new java.util.Date()); r.setCreditType("Murabaha"); r.setBalanceDue(63000000.0);
+    rows.add(r);
+    r = new com.myspace.concentration_risk.ConcentrationRow();
+    r.setCompanyName("Sahara Telecom"); r.setCompanyField("Telecom"); r.setGeographicalConcentration("Tripoli");
+    r.setValueGiven(52000000.0); r.setGivenDate(new java.util.Date()); r.setCreditType("Ijara"); r.setBalanceDue(51000000.0);
+    rows.add(r);
+    r = new com.myspace.concentration_risk.ConcentrationRow();
+    r.setCompanyName("Nile Food Co"); r.setCompanyField("Agriculture"); r.setGeographicalConcentration("Misrata");
+    r.setValueGiven(38000000.0); r.setGivenDate(new java.util.Date()); r.setCreditType("Musharaka"); r.setBalanceDue(37000000.0);
+    rows.add(r);
+}
+
+kcontext.setVariable("concentrationData", rows);
+kcontext.setVariable("adjustedData", rows);
+System.out.println("Parsed " + rows.size() + " concentration rows for: " + reqType);
+      ]]></bpmn2:script>
+    </bpmn2:scriptTask>
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 3 — DATA ADJUSTMENT AND ROW MANAGEMENT (Maker)
+         SRS 5.3 / FR-3 — edit base values, hide rows
+         ═══════════════════════════════════════════ -->
+    <bpmn2:userTask id="_Screen3" name="Screen 3 - Data Adjustment and Review" drools:taskName="Screen3_AdjustmentReview">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Screen 3 - Data Adjustment and Review]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>_SF_Merge3_S3</bpmn2:incoming>
+      <bpmn2:outgoing>_SF_S3_S4</bpmn2:outgoing>
+      <bpmn2:ioSpecification>
+        <bpmn2:dataInput id="_Screen3_TaskNameInput" drools:dtype="Object" name="TaskName"/>
+        <bpmn2:dataInput id="_Screen3_GroupIdInput" drools:dtype="Object" name="GroupId"/>
+        <bpmn2:dataInput id="_Screen3_SkippableInput" drools:dtype="Object" name="Skippable"/>
+        <bpmn2:dataInput id="_Screen3_FormNameInput" drools:dtype="Object" name="FormName"/>
+        <bpmn2:dataInput id="_Screen3_In_concentrationData" drools:dtype="java.util.List" name="concentrationData"/>
+        <bpmn2:dataInput id="_Screen3_In_checkerComment" drools:dtype="String" name="checkerComment"/>
+        <bpmn2:dataInput id="_Screen3_In_finalCheckerComment" drools:dtype="String" name="finalCheckerComment"/>
+        <bpmn2:dataInput id="_Screen3_In_returnReason" drools:dtype="String" name="returnReason"/>
+        <bpmn2:dataOutput id="_Screen3_Out_adjustedData" drools:dtype="java.util.List" name="adjustedData"/>
+        <bpmn2:inputSet>
+          <bpmn2:dataInputRefs>_Screen3_TaskNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen3_GroupIdInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen3_SkippableInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen3_FormNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen3_In_concentrationData</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen3_In_checkerComment</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen3_In_finalCheckerComment</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen3_In_returnReason</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet>
+          <bpmn2:dataOutputRefs>_Screen3_Out_adjustedData</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen3_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Screen3_AdjustmentReview]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen3_TaskNameInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen3_GroupIdInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[maker]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen3_GroupIdInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen3_SkippableInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen3_SkippableInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen3_FormNameInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Screen3_AdjustmentReview]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen3_FormNameInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:sourceRef>concentrationData</bpmn2:sourceRef>
+        <bpmn2:targetRef>_Screen3_In_concentrationData</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:sourceRef>checkerComment</bpmn2:sourceRef>
+        <bpmn2:targetRef>_Screen3_In_checkerComment</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:sourceRef>finalCheckerComment</bpmn2:sourceRef>
+        <bpmn2:targetRef>_Screen3_In_finalCheckerComment</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:sourceRef>returnReason</bpmn2:sourceRef>
+        <bpmn2:targetRef>_Screen3_In_returnReason</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation>
+        <bpmn2:sourceRef>_Screen3_Out_adjustedData</bpmn2:sourceRef>
+        <bpmn2:targetRef>adjustedData</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:potentialOwner>
+        <bpmn2:resourceAssignmentExpression>
+          <bpmn2:formalExpression>maker</bpmn2:formalExpression>
+        </bpmn2:resourceAssignmentExpression>
+      </bpmn2:potentialOwner>
+    </bpmn2:userTask>
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 4 — CHECKER REVIEW (Checker)
+         SRS 5.4 / FR-4 — view-only + Return to Sender
+         ═══════════════════════════════════════════ -->
+    <bpmn2:userTask id="_Screen4" name="Screen 4 - Checker Review" drools:taskName="Screen4_CheckerReview">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Screen 4 - Checker Review]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>_SF_S3_S4</bpmn2:incoming>
+      <bpmn2:outgoing>_SF_S4_GW_Checker</bpmn2:outgoing>
+      <bpmn2:ioSpecification>
+        <bpmn2:dataInput id="_Screen4_TaskNameInput" drools:dtype="Object" name="TaskName"/>
+        <bpmn2:dataInput id="_Screen4_GroupIdInput" drools:dtype="Object" name="GroupId"/>
+        <bpmn2:dataInput id="_Screen4_SkippableInput" drools:dtype="Object" name="Skippable"/>
+        <bpmn2:dataInput id="_Screen4_FormNameInput" drools:dtype="Object" name="FormName"/>
+        <bpmn2:dataInput id="_Screen4_In_adjustedData" drools:dtype="java.util.List" name="adjustedData"/>
+        <bpmn2:dataOutput id="_Screen4_Out_checkerDecision" drools:dtype="String" name="checkerDecision"/>
+        <bpmn2:dataOutput id="_Screen4_Out_checkerComment" drools:dtype="String" name="checkerComment"/>
+        <bpmn2:inputSet>
+          <bpmn2:dataInputRefs>_Screen4_TaskNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen4_GroupIdInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen4_SkippableInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen4_FormNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen4_In_adjustedData</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet>
+          <bpmn2:dataOutputRefs>_Screen4_Out_checkerDecision</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>_Screen4_Out_checkerComment</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen4_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Screen4_CheckerReview]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen4_TaskNameInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen4_GroupIdInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[checker]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen4_GroupIdInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen4_SkippableInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen4_SkippableInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen4_FormNameInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Screen4_CheckerReview]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen4_FormNameInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:sourceRef>adjustedData</bpmn2:sourceRef>
+        <bpmn2:targetRef>_Screen4_In_adjustedData</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation>
+        <bpmn2:sourceRef>_Screen4_Out_checkerDecision</bpmn2:sourceRef>
+        <bpmn2:targetRef>checkerDecision</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation>
+        <bpmn2:sourceRef>_Screen4_Out_checkerComment</bpmn2:sourceRef>
+        <bpmn2:targetRef>checkerComment</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:potentialOwner>
+        <bpmn2:resourceAssignmentExpression>
+          <bpmn2:formalExpression>checker</bpmn2:formalExpression>
+        </bpmn2:resourceAssignmentExpression>
+      </bpmn2:potentialOwner>
+    </bpmn2:userTask>
+
+    <!-- GATEWAY — CHECKER DECISION (SRS 5.4) -->
+    <bpmn2:exclusiveGateway id="_GW_Merge3" name="Merge into Screen 3" gatewayDirection="Converging">
+      <bpmn2:incoming>_SF_Parse_Merge3</bpmn2:incoming>
+      <bpmn2:incoming>_SF_GW_Checker_Merge3</bpmn2:incoming>
+      <bpmn2:incoming>_SF_GW_Director_Merge3</bpmn2:incoming>
+      <bpmn2:outgoing>_SF_Merge3_S3</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:exclusiveGateway id="_GW_Merge6" name="Merge into Screen 6" gatewayDirection="Converging">
+      <bpmn2:incoming>_SF_S5_Merge6</bpmn2:incoming>
+      <bpmn2:incoming>_SF_GW_FinalChecker_Merge6</bpmn2:incoming>
+      <bpmn2:outgoing>_SF_Merge6_S6</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:exclusiveGateway id="_GW_Checker" name="Checker Decision?" gatewayDirection="Diverging">
+      <bpmn2:incoming>_SF_S4_GW_Checker</bpmn2:incoming>
+      <bpmn2:outgoing>_SF_GW_Checker_Approve</bpmn2:outgoing>
+      <bpmn2:outgoing>_SF_GW_Checker_Merge3</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 5 — AUTOMATIC PROCESSING (System)
+         SRS 5.5 / FR-5 — concentration calculations
+         ═══════════════════════════════════════════ -->
+    <bpmn2:scriptTask id="_Screen5" name="Screen 5 - Automatic Calculation" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Screen 5 - Automatic Calculation]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>_SF_GW_Checker_Approve</bpmn2:incoming>
+      <bpmn2:outgoing>_SF_S5_Merge6</bpmn2:outgoing>
+      <bpmn2:script><![CDATA[
+// ═══ AUTOMATIC CALCULATION ENGINE (SRS 5.5) ═══
+// For each dimension (Company Field / Geographical / Credit type):
+//    relative weight = balance / total * 100
+//    weight squared   = relative weight * relative weight
+// Hidden rows and adjustments from Screen 3 are fully incorporated.
+
+java.util.List rows = (java.util.List) kcontext.getVariable("adjustedData");
+String reqType = (String) kcontext.getVariable("requirementType");
+Double limit = (Double) kcontext.getVariable("regulatoryLimit");
+if (limit == null) { limit = 25.0; }
+
+double total = 0.0;
+for (Object o : rows) {
+    com.myspace.concentration_risk.ConcentrationRow r = (com.myspace.concentration_risk.ConcentrationRow) o;
+    if (r == null || Boolean.TRUE.equals(r.getHidden())) { continue; }
+    double v = (r.getAdjustedValue() != null ? r.getAdjustedValue() : (r.getBalanceDue() != null ? r.getBalanceDue() : 0.0));
+    total += v;
+}
+if (total <= 0.0) { total = 1.0; }
+
+java.util.LinkedHashMap sectors = new java.util.LinkedHashMap();
+java.util.LinkedHashMap geos = new java.util.LinkedHashMap();
+java.util.LinkedHashMap credits = new java.util.LinkedHashMap();
+for (Object o : rows) {
+    com.myspace.concentration_risk.ConcentrationRow r = (com.myspace.concentration_risk.ConcentrationRow) o;
+    if (r == null || Boolean.TRUE.equals(r.getHidden())) { continue; }
+    double v = (r.getAdjustedValue() != null ? r.getAdjustedValue() : (r.getBalanceDue() != null ? r.getBalanceDue() : 0.0));
+    String fk = r.getCompanyField() != null ? r.getCompanyField() : "N/A";
+    String gk = r.getGeographicalConcentration() != null ? r.getGeographicalConcentration() : "N/A";
+    String ck = r.getCreditType() != null ? r.getCreditType() : "N/A";
+    Double fs = (Double) sectors.get(fk); sectors.put(fk, new Double((fs == null ? 0.0 : fs.doubleValue()) + v));
+    Double gs = (Double) geos.get(gk); geos.put(gk, new Double((gs == null ? 0.0 : gs.doubleValue()) + v));
+    Double cs = (Double) credits.get(ck); credits.put(ck, new Double((cs == null ? 0.0 : cs.doubleValue()) + v));
+}
+
+java.util.List sectorResults = new java.util.ArrayList();
+java.util.List geoResults = new java.util.ArrayList();
+java.util.List creditResults = new java.util.ArrayList();
+for (Object e : sectors.entrySet()) {
+    java.util.Map.Entry en = (java.util.Map.Entry) e;
+    Double bal = (Double) en.getValue();
+    com.myspace.concentration_risk.DimensionResult d = new com.myspace.concentration_risk.DimensionResult();
+    d.setName((String) en.getKey());
+    d.setBalance(bal);
+    double rel = bal.doubleValue() / total * 100.0;
+    d.setRelativeWeight(Math.round(rel * 100.0) / 100.0);
+    d.setWeightSquared(Math.round(d.getRelativeWeight() * d.getRelativeWeight() * 100.0) / 100.0);
+    sectorResults.add(d);
+}
+for (Object e : geos.entrySet()) {
+    java.util.Map.Entry en = (java.util.Map.Entry) e;
+    Double bal = (Double) en.getValue();
+    com.myspace.concentration_risk.DimensionResult d = new com.myspace.concentration_risk.DimensionResult();
+    d.setName((String) en.getKey());
+    d.setBalance(bal);
+    double rel = bal.doubleValue() / total * 100.0;
+    d.setRelativeWeight(Math.round(rel * 100.0) / 100.0);
+    d.setWeightSquared(Math.round(d.getRelativeWeight() * d.getRelativeWeight() * 100.0) / 100.0);
+    geoResults.add(d);
+}
+for (Object e : credits.entrySet()) {
+    java.util.Map.Entry en = (java.util.Map.Entry) e;
+    Double bal = (Double) en.getValue();
+    com.myspace.concentration_risk.DimensionResult d = new com.myspace.concentration_risk.DimensionResult();
+    d.setName((String) en.getKey());
+    d.setBalance(bal);
+    double rel = bal.doubleValue() / total * 100.0;
+    d.setRelativeWeight(Math.round(rel * 100.0) / 100.0);
+    d.setWeightSquared(Math.round(d.getRelativeWeight() * d.getRelativeWeight() * 100.0) / 100.0);
+    creditResults.add(d);
+}
+
+double hhiS = 0.0;
+double hhiG = 0.0;
+double hhiC = 0.0;
+double maxS = 0.0;
+for (Object o : sectorResults) {
+    com.myspace.concentration_risk.DimensionResult d = (com.myspace.concentration_risk.DimensionResult) o;
+    hhiS += d.getWeightSquared();
+    if (d.getRelativeWeight() != null && d.getRelativeWeight() > maxS) { maxS = d.getRelativeWeight(); }
+}
+for (Object o : geoResults) {
+    com.myspace.concentration_risk.DimensionResult d = (com.myspace.concentration_risk.DimensionResult) o;
+    hhiG += d.getWeightSquared();
+}
+for (Object o : creditResults) {
+    com.myspace.concentration_risk.DimensionResult d = (com.myspace.concentration_risk.DimensionResult) o;
+    hhiC += d.getWeightSquared();
+}
+
+com.myspace.concentration_risk.CalculatedResults res = new com.myspace.concentration_risk.CalculatedResults();
+res.setRequirementType(reqType);
+res.setReportingPeriod("Q4-2025");
+res.setTotalBalance(total);
+res.setSectorResults(sectorResults);
+res.setGeographicResults(geoResults);
+res.setCreditTypeResults(creditResults);
+res.setHhiSector(Math.round(hhiS * 100.0) / 100.0);
+res.setHhiGeographic(Math.round(hhiG * 100.0) / 100.0);
+res.setHhiCreditType(Math.round(hhiC * 100.0) / 100.0);
+res.setMaxConcentration(Math.round(maxS * 100.0) / 100.0);
+res.setRegulatoryLimit(limit);
+res.setStatus(res.getMaxConcentration() > limit ? "NON-COMPLIANT" : "COMPLIANT");
+res.setCalculationDate(new java.util.Date().toString());
+res.setExcelFilePath("/reports/" + reqType.replace(" ", "_") + "_Q4_2025.xlsx");
+
+kcontext.setVariable("calculatedResults", res);
+kcontext.setVariable("excelFilePath", res.getExcelFilePath());
+kcontext.setVariable("reportStatus", "CALCULATED");
+System.out.println("Calculation done: " + res);
+      ]]></bpmn2:script>
+    </bpmn2:scriptTask>
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 6 — REPORT PREPARATION (Maker)
+         SRS 5.6 / FR-6 — narrative + download
+         ═══════════════════════════════════════════ -->
+    <bpmn2:userTask id="_Screen6" name="Screen 6 - Report Preparation" drools:taskName="Screen6_ReportPreparation">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Screen 6 - Report Preparation]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>_SF_Merge6_S6</bpmn2:incoming>
+      <bpmn2:outgoing>_SF_S6_S7</bpmn2:outgoing>
+      <bpmn2:ioSpecification>
+        <bpmn2:dataInput id="_Screen6_TaskNameInput" drools:dtype="Object" name="TaskName"/>
+        <bpmn2:dataInput id="_Screen6_GroupIdInput" drools:dtype="Object" name="GroupId"/>
+        <bpmn2:dataInput id="_Screen6_SkippableInput" drools:dtype="Object" name="Skippable"/>
+        <bpmn2:dataInput id="_Screen6_FormNameInput" drools:dtype="Object" name="FormName"/>
+        <bpmn2:dataInput id="_Screen6_In_calculatedResults" drools:dtype="com.myspace.concentration_risk.CalculatedResults" name="calculatedResults"/>
+        <bpmn2:dataInput id="_Screen6_In_excelFilePath" drools:dtype="String" name="excelFilePath"/>
+        <bpmn2:dataOutput id="_Screen6_Out_narrativeReport" drools:dtype="String" name="narrativeReport"/>
+        <bpmn2:inputSet>
+          <bpmn2:dataInputRefs>_Screen6_TaskNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen6_GroupIdInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen6_SkippableInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen6_FormNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen6_In_calculatedResults</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen6_In_excelFilePath</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet>
+          <bpmn2:dataOutputRefs>_Screen6_Out_narrativeReport</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen6_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Screen6_ReportPreparation]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen6_TaskNameInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen6_GroupIdInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[maker]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen6_GroupIdInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen6_SkippableInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen6_SkippableInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen6_FormNameInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Screen6_ReportPreparation]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen6_FormNameInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:sourceRef>calculatedResults</bpmn2:sourceRef>
+        <bpmn2:targetRef>_Screen6_In_calculatedResults</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:sourceRef>excelFilePath</bpmn2:sourceRef>
+        <bpmn2:targetRef>_Screen6_In_excelFilePath</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation>
+        <bpmn2:sourceRef>_Screen6_Out_narrativeReport</bpmn2:sourceRef>
+        <bpmn2:targetRef>narrativeReport</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:potentialOwner>
+        <bpmn2:resourceAssignmentExpression>
+          <bpmn2:formalExpression>maker</bpmn2:formalExpression>
+        </bpmn2:resourceAssignmentExpression>
+      </bpmn2:potentialOwner>
+    </bpmn2:userTask>
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 7 — FINAL REPORT REVIEW (Final Checker)
+         SRS 5.7 / FR-7 — view-only + Return to Sender
+         ═══════════════════════════════════════════ -->
+    <bpmn2:userTask id="_Screen7" name="Screen 7 - Final Report Review" drools:taskName="Screen7_FinalReportReview">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Screen 7 - Final Report Review]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>_SF_S6_S7</bpmn2:incoming>
+      <bpmn2:outgoing>_SF_S7_GW_FinalChecker</bpmn2:outgoing>
+      <bpmn2:ioSpecification>
+        <bpmn2:dataInput id="_Screen7_TaskNameInput" drools:dtype="Object" name="TaskName"/>
+        <bpmn2:dataInput id="_Screen7_GroupIdInput" drools:dtype="Object" name="GroupId"/>
+        <bpmn2:dataInput id="_Screen7_SkippableInput" drools:dtype="Object" name="Skippable"/>
+        <bpmn2:dataInput id="_Screen7_FormNameInput" drools:dtype="Object" name="FormName"/>
+        <bpmn2:dataInput id="_Screen7_In_calculatedResults" drools:dtype="com.myspace.concentration_risk.CalculatedResults" name="calculatedResults"/>
+        <bpmn2:dataInput id="_Screen7_In_narrativeReport" drools:dtype="String" name="narrativeReport"/>
+        <bpmn2:dataOutput id="_Screen7_Out_finalCheckerDecision" drools:dtype="String" name="finalCheckerDecision"/>
+        <bpmn2:dataOutput id="_Screen7_Out_finalCheckerComment" drools:dtype="String" name="finalCheckerComment"/>
+        <bpmn2:inputSet>
+          <bpmn2:dataInputRefs>_Screen7_TaskNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen7_GroupIdInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen7_SkippableInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen7_FormNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen7_In_calculatedResults</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen7_In_narrativeReport</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet>
+          <bpmn2:dataOutputRefs>_Screen7_Out_finalCheckerDecision</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>_Screen7_Out_finalCheckerComment</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen7_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Screen7_FinalReportReview]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen7_TaskNameInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen7_GroupIdInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[finalChecker]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen7_GroupIdInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen7_SkippableInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen7_SkippableInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen7_FormNameInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Screen7_FinalReportReview]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen7_FormNameInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:sourceRef>calculatedResults</bpmn2:sourceRef>
+        <bpmn2:targetRef>_Screen7_In_calculatedResults</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:sourceRef>narrativeReport</bpmn2:sourceRef>
+        <bpmn2:targetRef>_Screen7_In_narrativeReport</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation>
+        <bpmn2:sourceRef>_Screen7_Out_finalCheckerDecision</bpmn2:sourceRef>
+        <bpmn2:targetRef>finalCheckerDecision</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation>
+        <bpmn2:sourceRef>_Screen7_Out_finalCheckerComment</bpmn2:sourceRef>
+        <bpmn2:targetRef>finalCheckerComment</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:potentialOwner>
+        <bpmn2:resourceAssignmentExpression>
+          <bpmn2:formalExpression>finalChecker</bpmn2:formalExpression>
+        </bpmn2:resourceAssignmentExpression>
+      </bpmn2:potentialOwner>
+    </bpmn2:userTask>
+
+    <!-- GATEWAY — FINAL CHECKER DECISION (SRS 5.7) -->
+    <bpmn2:exclusiveGateway id="_GW_FinalChecker" name="Final Checker Decision?" gatewayDirection="Diverging">
+      <bpmn2:incoming>_SF_S7_GW_FinalChecker</bpmn2:incoming>
+      <bpmn2:outgoing>_SF_GW_FinalChecker_Approve</bpmn2:outgoing>
+      <bpmn2:outgoing>_SF_GW_FinalChecker_Merge6</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 8 — DIRECTOR FINAL REPORT & ARCHIVING (Risk Director)
+         SRS 5.8 / FR-8 — statement + archive + download
+         ═══════════════════════════════════════════ -->
+    <bpmn2:userTask id="_Screen8" name="Screen 8 - Director Final Report and Archiving" drools:taskName="Screen8_DirectorFinalReport">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Screen 8 - Director Final Report and Archiving]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>_SF_GW_FinalChecker_Approve</bpmn2:incoming>
+      <bpmn2:outgoing>_SF_S8_GW_Director</bpmn2:outgoing>
+      <bpmn2:ioSpecification>
+        <bpmn2:dataInput id="_Screen8_TaskNameInput" drools:dtype="Object" name="TaskName"/>
+        <bpmn2:dataInput id="_Screen8_GroupIdInput" drools:dtype="Object" name="GroupId"/>
+        <bpmn2:dataInput id="_Screen8_SkippableInput" drools:dtype="Object" name="Skippable"/>
+        <bpmn2:dataInput id="_Screen8_FormNameInput" drools:dtype="Object" name="FormName"/>
+        <bpmn2:dataInput id="_Screen8_In_calculatedResults" drools:dtype="com.myspace.concentration_risk.CalculatedResults" name="calculatedResults"/>
+        <bpmn2:dataInput id="_Screen8_In_narrativeReport" drools:dtype="String" name="narrativeReport"/>
+        <bpmn2:dataOutput id="_Screen8_Out_directorDecision" drools:dtype="String" name="directorDecision"/>
+        <bpmn2:dataOutput id="_Screen8_Out_directorStatement" drools:dtype="String" name="directorStatement"/>
+        <bpmn2:dataOutput id="_Screen8_Out_returnReason" drools:dtype="String" name="returnReason"/>
+        <bpmn2:inputSet>
+          <bpmn2:dataInputRefs>_Screen8_TaskNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen8_GroupIdInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen8_SkippableInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen8_FormNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen8_In_calculatedResults</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_Screen8_In_narrativeReport</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet>
+          <bpmn2:dataOutputRefs>_Screen8_Out_directorDecision</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>_Screen8_Out_directorStatement</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>_Screen8_Out_returnReason</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen8_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Screen8_DirectorFinalReport]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen8_TaskNameInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen8_GroupIdInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[riskDirector]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen8_GroupIdInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen8_SkippableInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen8_SkippableInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>_Screen8_FormNameInput</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Screen8_DirectorFinalReport]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_Screen8_FormNameInput]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:sourceRef>calculatedResults</bpmn2:sourceRef>
+        <bpmn2:targetRef>_Screen8_In_calculatedResults</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:sourceRef>narrativeReport</bpmn2:sourceRef>
+        <bpmn2:targetRef>_Screen8_In_narrativeReport</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation>
+        <bpmn2:sourceRef>_Screen8_Out_directorDecision</bpmn2:sourceRef>
+        <bpmn2:targetRef>directorDecision</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation>
+        <bpmn2:sourceRef>_Screen8_Out_directorStatement</bpmn2:sourceRef>
+        <bpmn2:targetRef>directorStatement</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation>
+        <bpmn2:sourceRef>_Screen8_Out_returnReason</bpmn2:sourceRef>
+        <bpmn2:targetRef>returnReason</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:potentialOwner>
+        <bpmn2:resourceAssignmentExpression>
+          <bpmn2:formalExpression>riskDirector</bpmn2:formalExpression>
+        </bpmn2:resourceAssignmentExpression>
+      </bpmn2:potentialOwner>
+    </bpmn2:userTask>
+
+    <!-- GATEWAY — DIRECTOR DECISION (SRS 5.8) -->
+    <bpmn2:exclusiveGateway id="_GW_Director" name="Director Decision?" gatewayDirection="Diverging">
+      <bpmn2:incoming>_SF_S8_GW_Director</bpmn2:incoming>
+      <bpmn2:outgoing>_SF_GW_Director_Archive</bpmn2:outgoing>
+      <bpmn2:outgoing>_SF_GW_Director_Merge3</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <!-- ARCHIVE — RISK MANAGEMENT ARCHIVE (Script Task) -->
+    <bpmn2:scriptTask id="_Archive" name="Archive Final Report" scriptFormat="http://www.java.com/java">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Archive Final Report]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>_SF_GW_Director_Archive</bpmn2:incoming>
+      <bpmn2:outgoing>_SF_Archive_End</bpmn2:outgoing>
+      <bpmn2:script><![CDATA[
+String reqType = (String) kcontext.getVariable("requirementType");
+kcontext.setVariable("archiveRef", "CR-CONC-" + reqType.replace(" ", "_").toUpperCase() + "-" + System.currentTimeMillis());
+kcontext.setVariable("reportStatus", "ARCHIVED");
+System.out.println("Report archived: " + kcontext.getVariable("archiveRef"));
+      ]]></bpmn2:script>
+    </bpmn2:scriptTask>
+
+    <!-- END EVENT -->
+    <bpmn2:endEvent id="_End" name="End">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[End]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>_SF_Archive_End</bpmn2:incoming>
+    </bpmn2:endEvent>
+
+    <!-- ═══════════════════════════════════════════
+         SEQUENCE FLOWS
+         ═══════════════════════════════════════════ -->
+    <bpmn2:sequenceFlow id="_SF_Start_S1" sourceRef="_StartEvent" targetRef="_Screen1"/>
+    <bpmn2:sequenceFlow id="_SF_S1_S2" sourceRef="_Screen1" targetRef="_Screen2"/>
+    <bpmn2:sequenceFlow id="_SF_S2_Parse" sourceRef="_Screen2" targetRef="_ParseDocs"/>
+    <bpmn2:sequenceFlow id="_SF_Parse_Merge3" sourceRef="_ParseDocs" targetRef="_GW_Merge3"/>
+    <bpmn2:sequenceFlow id="_SF_Merge3_S3" sourceRef="_GW_Merge3" targetRef="_Screen3"/>
+    <bpmn2:sequenceFlow id="_SF_S3_S4" sourceRef="_Screen3" targetRef="_Screen4"/>
+    <bpmn2:sequenceFlow id="_SF_S4_GW_Checker" sourceRef="_Screen4" targetRef="_GW_Checker"/>
+    <bpmn2:sequenceFlow id="_SF_GW_Checker_Approve" name="Approved" sourceRef="_GW_Checker" targetRef="_Screen5">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" language="http://www.java.com/java"><![CDATA[return "Approved".equals(checkerDecision);]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="_SF_GW_Checker_Merge3" name="Return to Sender" sourceRef="_GW_Checker" targetRef="_GW_Merge3">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" language="http://www.java.com/java"><![CDATA[return "ReturnToSender".equals(checkerDecision);]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="_SF_S5_Merge6" sourceRef="_Screen5" targetRef="_GW_Merge6"/>
+    <bpmn2:sequenceFlow id="_SF_Merge6_S6" sourceRef="_GW_Merge6" targetRef="_Screen6"/>
+    <bpmn2:sequenceFlow id="_SF_S6_S7" sourceRef="_Screen6" targetRef="_Screen7"/>
+    <bpmn2:sequenceFlow id="_SF_S7_GW_FinalChecker" sourceRef="_Screen7" targetRef="_GW_FinalChecker"/>
+    <bpmn2:sequenceFlow id="_SF_GW_FinalChecker_Approve" name="Approved" sourceRef="_GW_FinalChecker" targetRef="_Screen8">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" language="http://www.java.com/java"><![CDATA[return "Approved".equals(finalCheckerDecision);]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="_SF_GW_FinalChecker_Merge6" name="Return to Sender" sourceRef="_GW_FinalChecker" targetRef="_GW_Merge6">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" language="http://www.java.com/java"><![CDATA[return "ReturnToSender".equals(finalCheckerDecision);]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="_SF_S8_GW_Director" sourceRef="_Screen8" targetRef="_GW_Director"/>
+    <bpmn2:sequenceFlow id="_SF_GW_Director_Archive" name="Approved" sourceRef="_GW_Director" targetRef="_Archive">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" language="http://www.java.com/java"><![CDATA[return "Approved".equals(directorDecision);]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="_SF_GW_Director_Merge3" name="Return for Modifications" sourceRef="_GW_Director" targetRef="_GW_Merge3">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" language="http://www.java.com/java"><![CDATA[return "ReturnToSender".equals(directorDecision);]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="_SF_Archive_End" sourceRef="_Archive" targetRef="_End"/>
+
+  </bpmn2:process>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       BPMN DIAGRAM INTERCHANGE
+       ═══════════════════════════════════════════════════════════ -->
+  <bpmndi:BPMNDiagram id="_BPMNDiagram_ConcentrationRisk">
+    <bpmndi:BPMNPlane id="_BPMNPlane_ConcentrationRisk" bpmnElement="concentration_risk.ConcentrationRisk">
+
+      <bpmndi:BPMNShape id="_StartEvent_di" bpmnElement="_StartEvent">
+        <dc:Bounds x="56" y="262" width="36" height="36"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="29" y="305" width="90" height="14"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_Screen1_di" bpmnElement="_Screen1">
+        <dc:Bounds x="152" y="240" width="180" height="80"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_Screen2_di" bpmnElement="_Screen2">
+        <dc:Bounds x="392" y="240" width="180" height="80"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_ParseDocs_di" bpmnElement="_ParseDocs">
+        <dc:Bounds x="632" y="240" width="180" height="80"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_Screen3_di" bpmnElement="_Screen3">
+        <dc:Bounds x="872" y="240" width="180" height="80"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_GW_Merge3_di" bpmnElement="_GW_Merge3" isMarkerVisible="true">
+        <dc:Bounds x="812" y="255" width="50" height="50"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="778" y="312" width="118" height="14"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_Screen4_di" bpmnElement="_Screen4">
+        <dc:Bounds x="1112" y="240" width="180" height="80"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_GW_Checker_di" bpmnElement="_GW_Checker" isMarkerVisible="true">
+        <dc:Bounds x="1352" y="255" width="50" height="50"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="1318" y="312" width="118" height="14"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_Screen5_di" bpmnElement="_Screen5">
+        <dc:Bounds x="1472" y="240" width="180" height="80"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_GW_Merge6_di" bpmnElement="_GW_Merge6" isMarkerVisible="true">
+        <dc:Bounds x="1652" y="255" width="50" height="50"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="1618" y="312" width="118" height="14"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_Screen6_di" bpmnElement="_Screen6">
+        <dc:Bounds x="1712" y="240" width="180" height="80"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_Screen7_di" bpmnElement="_Screen7">
+        <dc:Bounds x="1952" y="240" width="180" height="80"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_GW_FinalChecker_di" bpmnElement="_GW_FinalChecker" isMarkerVisible="true">
+        <dc:Bounds x="2192" y="255" width="50" height="50"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="2158" y="312" width="118" height="14"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_Screen8_di" bpmnElement="_Screen8">
+        <dc:Bounds x="2312" y="240" width="180" height="80"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_GW_Director_di" bpmnElement="_GW_Director" isMarkerVisible="true">
+        <dc:Bounds x="2552" y="255" width="50" height="50"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="2518" y="312" width="118" height="14"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_Archive_di" bpmnElement="_Archive">
+        <dc:Bounds x="2672" y="240" width="180" height="80"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_End_di" bpmnElement="_End">
+        <dc:Bounds x="2912" y="262" width="36" height="36"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="2905" y="305" width="50" height="14"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNEdge id="_SF_Start_S1_di" bpmnElement="_SF_Start_S1"><di:waypoint x="92" y="280"/><di:waypoint x="152" y="280"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_S1_S2_di" bpmnElement="_SF_S1_S2"><di:waypoint x="332" y="280"/><di:waypoint x="392" y="280"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_S2_Parse_di" bpmnElement="_SF_S2_Parse"><di:waypoint x="572" y="280"/><di:waypoint x="632" y="280"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_Parse_Merge3_di" bpmnElement="_SF_Parse_Merge3"><di:waypoint x="812" y="280"/><di:waypoint x="812" y="280"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_Merge3_S3_di" bpmnElement="_SF_Merge3_S3"><di:waypoint x="862" y="280"/><di:waypoint x="872" y="280"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_S3_S4_di" bpmnElement="_SF_S3_S4"><di:waypoint x="1052" y="280"/><di:waypoint x="1112" y="280"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_S4_GW_Checker_di" bpmnElement="_SF_S4_GW_Checker"><di:waypoint x="1292" y="280"/><di:waypoint x="1352" y="280"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_GW_Checker_Approve_di" bpmnElement="_SF_GW_Checker_Approve"><di:waypoint x="1402" y="280"/><di:waypoint x="1472" y="280"/><bpmndi:BPMNLabel><dc:Bounds x="1417" y="262" width="60" height="14"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_GW_Checker_Merge3_di" bpmnElement="_SF_GW_Checker_Merge3"><di:waypoint x="1377" y="255"/><di:waypoint x="1377" y="195"/><di:waypoint x="837" y="195"/><di:waypoint x="837" y="255"/><bpmndi:BPMNLabel><dc:Bounds x="1140" y="177" width="100" height="14"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_S5_Merge6_di" bpmnElement="_SF_S5_Merge6"><di:waypoint x="1652" y="280"/><di:waypoint x="1652" y="280"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_Merge6_S6_di" bpmnElement="_SF_Merge6_S6"><di:waypoint x="1702" y="280"/><di:waypoint x="1712" y="280"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_S6_S7_di" bpmnElement="_SF_S6_S7"><di:waypoint x="1892" y="280"/><di:waypoint x="1952" y="280"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_S7_GW_FinalChecker_di" bpmnElement="_SF_S7_GW_FinalChecker"><di:waypoint x="2132" y="280"/><di:waypoint x="2192" y="280"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_GW_FinalChecker_Approve_di" bpmnElement="_SF_GW_FinalChecker_Approve"><di:waypoint x="2242" y="280"/><di:waypoint x="2312" y="280"/><bpmndi:BPMNLabel><dc:Bounds x="2257" y="262" width="60" height="14"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_GW_FinalChecker_Merge6_di" bpmnElement="_SF_GW_FinalChecker_Merge6"><di:waypoint x="2217" y="255"/><di:waypoint x="2217" y="155"/><di:waypoint x="1677" y="155"/><di:waypoint x="1677" y="255"/><bpmndi:BPMNLabel><dc:Bounds x="1980" y="137" width="100" height="14"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_S8_GW_Director_di" bpmnElement="_SF_S8_GW_Director"><di:waypoint x="2492" y="280"/><di:waypoint x="2552" y="280"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_GW_Director_Archive_di" bpmnElement="_SF_GW_Director_Archive"><di:waypoint x="2602" y="280"/><di:waypoint x="2672" y="280"/><bpmndi:BPMNLabel><dc:Bounds x="2617" y="262" width="60" height="14"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_GW_Director_Merge3_di" bpmnElement="_SF_GW_Director_Merge3"><di:waypoint x="2577" y="255"/><di:waypoint x="2577" y="115"/><di:waypoint x="837" y="115"/><di:waypoint x="837" y="255"/><bpmndi:BPMNLabel><dc:Bounds x="1770" y="97" width="130" height="14"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_SF_Archive_End_di" bpmnElement="_SF_Archive_End"><di:waypoint x="2852" y="280"/><di:waypoint x="2912" y="280"/></bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+  <!-- BPSim Data (required by jBPM Business Central) -->
+  <bpmn2:relationship id="_BPSimRel" type="BPSimData">
+    <bpmn2:extensionElements>
+      <bpsim:BPSimData>
+        <bpsim:Scenario xsi:type="bpsim:Scenario" id="default" name="Simulation scenario">
+          <bpsim:ScenarioParameters xsi:type="bpsim:ScenarioParameters"/>
+        </bpsim:Scenario>
+      </bpsim:BPSimData>
+    </bpmn2:extensionElements>
+    <bpmn2:source>_ConcentrationRiskDefs</bpmn2:source>
+    <bpmn2:target>_ConcentrationRiskDefs</bpmn2:target>
+  </bpmn2:relationship>
+
+</bpmn2:definitions>
